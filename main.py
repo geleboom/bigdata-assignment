@@ -4,17 +4,17 @@ from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori, fpgrowth, association_rules
 
 # -------------------------------
-# 📂 STEP 1: Load Dataset (manual fix)
+#  Load Dataset 
 # -------------------------------
 transactions = []
 
-with open("food.csv", "r") as file:
+with open("market_basket_large.csv", "r") as file:
     for line in file:
         transaction = line.strip().split(",")
         transactions.append(transaction)
 
 # -------------------------------
-# 🔄 STEP 2: One-Hot Encoding
+# Encoding
 # -------------------------------
 te = TransactionEncoder()
 te_data = te.fit(transactions).transform(transactions)
@@ -25,7 +25,7 @@ print(f"Total transactions: {len(transactions)}")
 print("-" * 50)
 
 # -------------------------------
-# 🔹 STEP 3: APRIORI
+#  APRIORI
 # -------------------------------
 frequent_apriori = apriori(df_encoded, min_support=0.02, use_colnames=True)
 
@@ -39,7 +39,7 @@ rules_apriori = association_rules(
 rules_apriori = rules_apriori.sort_values(by='lift', ascending=False)
 
 # -------------------------------
-# 🔹 STEP 4: FP-GROWTH
+#  FP-GROWTH
 # -------------------------------
 frequent_fp = fpgrowth(df_encoded, min_support=0.02, use_colnames=True)
 
@@ -53,7 +53,7 @@ rules_fp = association_rules(
 rules_fp = rules_fp.sort_values(by='lift', ascending=False)
 
 # -------------------------------
-# 📊 STEP 5: Display Top Rules
+#  Display Top Rules
 # -------------------------------
 print("\n🔥 TOP 10 APRIORI RULES (by Lift)")
 print("-" * 50)
@@ -72,12 +72,12 @@ for i, row in rules_fp.head(10).iterrows():
     print("-" * 40)
 
 # -------------------------------
-# 📈 IMPROVED VISUALIZATION
+#  VISUALIZATION
 # -------------------------------
 
 top_rules = rules_fp.head(10).copy()
 
-# 🔥 Clean labels (remove frozenset)
+
 def clean_set(s):
     return ', '.join(list(s))
 
@@ -86,7 +86,7 @@ top_rules['rule'] = top_rules.apply(
     axis=1
 )
 
-# Increase figure size for better view
+
 plt.figure(figsize=(10, 6))
 
 # Plot
